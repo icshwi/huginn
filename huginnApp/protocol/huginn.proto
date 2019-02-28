@@ -1,0 +1,45 @@
+##################################################
+#
+# Protocol File
+#
+# Protocol file for huginn
+# European Spallation Source ERIC
+#
+# 
+# This protocol file is to create extra access
+##################################################
+
+
+##################################################
+# General Settings
+##################################################
+
+Terminator = "\r\n";
+ReplyTimeout = 2000;
+
+
+###################################################
+# Get functions
+###################################################
+
+
+setOUTMODE {
+   out "OUTMODE %s";
+}
+
+getOUTMODE1 {
+   out "OUTMODE? 1";
+   in "%s";
+}
+
+setANALOG {
+   out "ANALOG %s";
+}
+
+getANALOG1 {
+   out "ANALOG? 1";
+   in "%s";
+}
+
+
+
