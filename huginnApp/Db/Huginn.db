@@ -1,0 +1,999 @@
+################################################################
+# Initialization records from file
+################################################################
+##
+## 4 strings for subcryostat names to be displayed by the GUI and the device
+##
+
+record(stringout,  "$(P):SubNameA"){
+   field(TPRO, "1")
+   field(DESC, "Name of channel A")
+   field(DTYP, "Soft Channel")
+   field(PINI, "1")
+   field(PHAS, "1")
+   field(OUT,  "$(P1):INNAME_S0 PP")
+}
+
+record(stringout,  "$(P):SubNameB"){
+   field(TPRO, "1")
+   field(DESC, "Name of channel B")
+   field(DTYP, "Soft Channel")
+   field(PINI, "1")
+   field(PHAS, "1")
+   field(OUT,  "$(P1):INNAME_S1 PP")
+}
+
+record(stringout,  "$(P):SubNameC"){
+   field(TPRO, "1")
+   field(DESC, "Name of channel C")
+   field(DTYP, "Soft Channel")
+   field(PINI, "1")
+   field(PHAS, "1")
+   field(OUT,  "$(P1):INNAME_S2 PP")
+}
+
+record(stringout,  "$(P):SubNameD"){
+   field(TPRO, "1")
+   field(DESC, "Name of channel D")
+   field(DTYP, "Soft Channel")
+   field(PINI, "1")
+   field(PHAS, "1")
+   field(OUT,  "$(P1):INNAME_S3 PP")
+}
+
+
+################################################################
+##
+## setup bipolar mode for channel 3 and 4, ANALOG
+## there is no ANALOG command impleneted in the lakeshore driver, we have to write it ourself
+
+record(stringout,  "$(P):ANALOG1"){
+   field(TPRO, "1")
+   field(PINI, "1")
+   field(PHAS, "2")
+   field(DESC, "Sub Outmode channel 1")
+   field(DTYP, "stream")
+   field(OUT,  "@huginn.proto setANALOG $(PORT) $(ADDR)")
+#   field(FLNK, "$(P):GETANALOG1 PP")
+}
+record(stringout,  "$(P):ANALOG2"){
+   field(TPRO, "1")
+   field(PINI, "1")
+   field(PHAS, "2")
+   field(DESC, "Sub Outmode channel 1")
+   field(DTYP, "stream")
+   field(OUT,  "@huginn.proto setANALOG $(PORT) $(ADDR)")
+#   field(FLNK, "$(P):GETANALOG1 PP")
+}
+record(stringout,  "$(P):ANALOG3"){
+   field(TPRO, "1")
+   field(DESC, "Sub Outmode channel 1")
+   field(PINI, "1")
+   field(PHAS, "2")
+   field(DTYP, "stream")
+   field(OUT,  "@huginn.proto setANALOG $(PORT) $(ADDR)")
+#   field(FLNK, "$(P):GETANALOG1 PP")
+}
+record(stringout,  "$(P):ANALOG4"){
+   field(TPRO, "1")
+   field(PINI, "1")
+   field(PHAS, "2")
+   field(DESC, "Sub Outmode channel 1")
+   field(DTYP, "stream")
+   field(OUT,  "@huginn.proto setANALOG $(PORT) $(ADDR)")
+#   field(FLNK, "$(P):GETANALOG1 PP")
+}
+
+################################################################
+## 
+## setup output mode for all channels OUTMODE 
+## these value will overwrite the ANALOG values (input, output) if they are different from OUTMODE
+## because of way how the lakeshore driver was writen (overwriting OMM,OMI,OMP) we have to find some way around
+## We created a direct stream to the lakeshore device
+
+record(stringout,  "$(P):OUTMODE1"){
+   field(TPRO, "1")
+   field(PINI, "1")
+   field(PHAS, "6")
+   field(FLNK, "$(P):Convert1 PP")
+}
+
+record(aSub, "$(P):Convert1"){
+  field(TPRO, "1")
+  field(DESC, "init OMM, OMI, OMP")
+  field(SNAM, "asub_init")
+#inputs: 
+  field(INPA, "$(P):OUTMODE1")	field(FTA, "STRING")  field(NOA, "1")
+#outputs: 
+  field(OUTA, "$(P):OMM1 PP")	field(FTVA, "SHORT")
+  field(OUTB, "$(P):OMI1 PP")	field(FTVB, "SHORT")
+  field(OUTC, "$(P):OMP1 PP")	field(FTVC, "SHORT")
+  field(FLNK, "$(P):SendOut1 PP")
+}
+
+record(ao, "$(P):OMM1"){
+}
+record(ao, "$(P):OMI1"){
+}
+record(ao, "$(P):OMP1"){
+}
+
+record(seq, "$(P):SendOut1") {
+
+#   field(DLY1, "1")
+   field(DOL1, "$(P):OMM1")
+   field(LNK1, "$(P1):OMM1 PP")
+   field(DOL2, "$(P):OMI1")
+   field(LNK2, "$(P1):OMI1 PP")
+   field(DOL3, "$(P):OMP1")
+   field(LNK3, "$(P1):OMP1 PP")
+
+   field(DOL4, "$(P):OMM1")
+   field(LNK4, "$(P1):OMM_S1 PP")
+
+   field(DOL5, "$(P):OMI1")
+   field(LNK5, "$(P1):OMI_S1 PP")
+
+   field(DOL6, "$(P):OMP1")
+   field(LNK6, "$(P1):OMP_S1 PP")
+}
+
+
+
+
+record(stringout,  "$(P):OUTMODE2"){
+   field(TPRO, "1")
+   field(PINI, "1")
+   field(PHAS, "7")
+   field(FLNK, "$(P):Convert2 PP")
+}
+
+record(aSub, "$(P):Convert2"){
+  field(TPRO, "1")
+  field(DESC, "init OMM, OMI, OMP")
+  field(SNAM, "asub_init")
+#inputs: 
+  field(INPA, "$(P):OUTMODE2")	field(FTA, "STRING")  field(NOA, "1")
+#outputs: 
+  field(OUTA, "$(P):OMM2 PP")	field(FTVA, "SHORT")
+  field(OUTB, "$(P):OMI2 PP")	field(FTVB, "SHORT")
+  field(OUTC, "$(P):OMP2 PP")	field(FTVC, "SHORT")
+  field(FLNK, "$(P):SendOut2 PP")
+}
+
+record(ao, "$(P):OMM2"){
+}
+record(ao, "$(P):OMI2"){
+}
+record(ao, "$(P):OMP2"){
+}
+
+record(seq, "$(P):SendOut2") {
+
+#   field(DLY1, "1")
+   field(DOL1, "$(P):OMM2")
+   field(LNK1, "$(P1):OMM2 PP")
+   field(DOL2, "$(P):OMI2")
+   field(LNK2, "$(P1):OMI2 PP")
+   field(DOL3, "$(P):OMP2")
+   field(LNK3, "$(P1):OMP2 PP")
+
+   field(DOL4, "$(P):OMM2")
+   field(LNK4, "$(P1):OMM_S2 PP")
+
+   field(DOL5, "$(P):OMI2")
+   field(LNK5, "$(P1):OMI_S2 PP")
+
+   field(DOL6, "$(P):OMP2")
+   field(LNK6, "$(P1):OMP_S2 PP")
+
+}
+
+
+record(stringout,  "$(P):OUTMODE3"){
+   field(TPRO, "1")
+   field(PINI, "1")
+   field(PHAS, "8")
+   field(FLNK, "$(P):Convert3 PP")
+}
+
+record(aSub, "$(P):Convert3"){
+  field(TPRO, "1")
+  field(DESC, "init OMM, OMI, OMP")
+  field(SNAM, "asub_init")
+#inputs: 
+  field(INPA, "$(P):OUTMODE3")	field(FTA, "STRING")  field(NOA, "1")
+#outputs: 
+  field(OUTA, "$(P):OMM3 PP")	field(FTVA, "SHORT")
+  field(OUTB, "$(P):OMI3 PP")	field(FTVB, "SHORT")
+  field(OUTC, "$(P):OMP3 PP")	field(FTVC, "SHORT")
+  field(FLNK, "$(P):SendOut3 PP")
+}
+
+record(ao, "$(P):OMM3"){
+}
+record(ao, "$(P):OMI3"){
+}
+record(ao, "$(P):OMP3"){
+}
+
+record(seq, "$(P):SendOut3") {
+
+#   field(DLY1, "1")
+   field(DOL1, "$(P):OMM3")
+   field(LNK1, "$(P1):OMM3 PP")
+   field(DOL2, "$(P):OMI3")
+   field(LNK2, "$(P1):OMI3 PP")
+   field(DOL3, "$(P):OMP3")
+   field(LNK3, "$(P1):OMP3 PP")
+
+   field(DOL4, "$(P):OMM3")
+   field(LNK4, "$(P1):OMM_S3 PP")
+
+   field(DOL5, "$(P):OMI3")
+   field(LNK5, "$(P1):OMI_S3 PP")
+
+   field(DOL6, "$(P):OMP3")
+   field(LNK6, "$(P1):OMP_S3 PP")
+
+}
+
+
+
+
+record(stringout,  "$(P):OUTMODE4"){
+   field(TPRO, "1")
+   field(PINI, "1")
+   field(PHAS, "9")
+   field(FLNK, "$(P):Convert4 PP")
+}
+
+record(aSub, "$(P):Convert4"){
+  field(TPRO, "1")
+  field(DESC, "init OMM, OMI, OMP")
+  field(SNAM, "asub_init")
+#inputs: 
+  field(INPA, "$(P):OUTMODE4")	field(FTA, "STRING")  field(NOA, "1")
+#outputs: 
+  field(OUTA, "$(P):OMM4 PP")	field(FTVA, "SHORT")
+  field(OUTB, "$(P):OMI4 PP")	field(FTVB, "SHORT")
+  field(OUTC, "$(P):OMP4 PP")	field(FTVC, "SHORT")
+  field(FLNK, "$(P):SendOut4 PP")
+}
+
+record(ao, "$(P):OMM4"){
+}
+record(ao, "$(P):OMI4"){
+}
+record(ao, "$(P):OMP4"){
+}
+
+record(seq, "$(P):SendOut4") {
+   field(TPRO, "1")
+
+#   field(DLY1, "1")
+   field(DOL1, "$(P):OMM4")
+   field(LNK1, "$(P1):OMM4 PP")
+   field(DOL2, "$(P):OMM4")
+   field(LNK2, "$(P1):OMM_S4 PP")
+
+
+   field(DOL3, "$(P):OMI4")
+   field(LNK3, "$(P1):OMI4 PP")
+   field(DOL4, "$(P):OMI4")
+   field(LNK4, "$(P1):OMI_S4 PP")
+
+
+   field(DOL5, "$(P):OMP4")
+   field(LNK5, "$(P1):OMP4 PP")
+   field(DOL6, "$(P):OMP4")
+   field(LNK6, "$(P1):OMP_S4 PP")
+
+}
+
+
+
+
+
+
+
+
+################################################################
+## 
+## tables for keeping PID parameters, used later on to
+## setup PID parameters for peltier, channel 3 and 4
+## 
+record(aai,   "$(P):PID_T"){
+   field(DESC, "PID table keeping temperature")
+   field(DTYP, "Soft Channel")
+   field(NELM, "32")
+   field(FTVL, "DOUBLE")
+}
+
+record(aai,   "$(P):PID_P"){
+   field(DESC, "PID table keeping P value")
+   field(DTYP, "Soft Channel")
+   field(NELM, "32")
+   field(FTVL, "DOUBLE")
+}
+
+record(aai,   "$(P):PID_I"){
+   field(DESC, "PID table keeping I value")
+   field(DTYP, "Soft Channel")
+   field(NELM, "32")
+   field(FTVL, "DOUBLE")
+}
+
+record(aai,   "$(P):PID_D"){
+   field(DESC, "PID table keeping I value")
+   field(DTYP, "Soft Channel")
+   field(NELM, "32")
+   field(FTVL, "DOUBLE")
+}
+
+record(stringout, "$(P):PID3"){
+   field(TPRO, "1")
+   field(PINI, "1")
+   field(PHAS, "3")
+   field(OUT,  "$(P1):PID_S3 PP")
+}
+
+record(stringout, "$(P):PID4"){
+   field(TPRO, "1")
+   field(PINI, "1")
+   field(PHAS, "3")
+   field(OUT,  "$(P1):PID_S4 PP")
+}
+################################################################
+## set manual output of channels 3, and 4 to zero
+## 
+record(ao,  "$(P):MOUT3"){
+   field(TPRO, "1")
+   field(PINI, "1")
+   field(PHAS, "5")
+   field(VAL,  "0")
+   field(DESC, "Set manula output ch3 to 0")
+   field(DTYP, "Soft Channel")
+   field(OUT,  "$(P1):MOUT_S3 PP")
+}
+
+record(ao,  "$(P):MOUT4"){
+   field(TPRO, "1")
+   field(PINI, "1")
+   field(PHAS, "5")
+   field(VAL,  "0")
+   field(DESC, "Set manula output ch3 to 0")
+   field(DTYP, "Soft Channel")
+   field(OUT,  "$(P1):MOUT_S4 PP")
+}
+
+################################################################
+
+
+
+
+
+################################################################
+## records which appear in the main Huginn GUI
+## and records which help control the mode of Huginn (manual, auto-extended, auto) 
+##
+
+record(mbbo, "$(P):Mode") {
+   field(TPRO, "1")
+   field(DESC, "Mode of Huginn sub-cryostat system")
+   field(DTYP, "Soft Channel")
+   field(ZRST, "manual")
+   field(ONST, "auto main-external")
+   field(TWST, "auto")
+   field(VAL,  "0")
+   field(PINI, "YES")
+   field(PHAS, "1")
+}
+
+record(dfanout, "$(P):Sub_ON"){
+   field(TPRO, "1")
+   field(VAL, "0")
+   field(OMSL, "supervisory")
+   field(OUTA, "$(P):SubON_S3 PP")
+   field(OUTB, "$(P):SubON_S4 PP")
+   field(SELM, "All")
+   field(PINI, "YES")
+   field(PHAS, "2")
+}
+record(bo,    "$(P):SubON_S3") {
+   field(TPRO, "1")
+   field(DESC, "Huginn Sub-cryostat system on/off")
+   field(DTYP, "Soft Channel")
+   field(ZNAM, "Output 0ff")
+   field(ONAM, "Output On")
+   field(VAL,  "0")
+#  field(OUT,  "$(P1):RANGE_S3 PP")
+}
+record(bo,    "$(P):SubON_S4") {
+   field(TPRO, "1")
+   field(DESC, "Huginn Sub-cryostat system on/off")
+   field(DTYP, "Soft Channel")
+   field(ZNAM, "Output 0ff")
+   field(ONAM, "Output On")
+   field(VAL,  "0")
+#  field(OUT,  "$(P1):RANGE_S4 PP")
+}
+
+record(bo,    "$(P):MainON") {
+   field(DESC, "Main cryostat system on/off")
+   field(DTYP, "Soft Channel")
+   field(ZNAM, "0n")
+   field(ONAM, "Off")
+   field(VAL,  "0")
+   field(PINI, "YES")
+   field(PHAS, "3")
+#  field(OUT,  "$(P2):")
+}
+
+record(bi,    "$(P):SubON_S3_rbv") {
+   field(TPRO, "1")
+   field(DESC, "Huginn Sub-cryostat S3rbv on/off")
+   field(DTYP, "Soft Channel")
+   field(ZNAM, "0")
+   field(ONAM, "1")
+   field(VAL,  "0")
+   field(PINI, "YES")
+   field(INP,  "$(P1):RANGE3 CPP")
+}
+
+record(bi,    "$(P):SubON_S4_rbv") {
+   field(TPRO, "1")
+   field(DESC, "Huginn Sub-cryostat S4rbv on/off")
+   field(DTYP, "Soft Channel")
+   field(ZNAM, "0")
+   field(ONAM, "1")
+   field(VAL,  "0")
+   field(PINI, "YES")
+   field(INP,  "$(P1):RANGE4 CPP")
+}
+
+record(bi,    "$(P):MainON_rbv") {
+   field(DESC, "Main cryostat system on/off")
+   field(DTYP, "Soft Channel")
+   field(ZNAM, "0")
+   field(ONAM, "1")
+   field(VAL,  "0")
+   field(PINI, "YES")
+#  field(INP,  "$(P2): CPP")
+}
+
+# Record needed for GUI to indicate if the button is enabled od disabled
+record(bo,    "$(P):SubEnable") {
+   field(DTYP, "Soft Channel")
+   field(ZNAM, "0")
+   field(ONAM, "1")
+   field(VAL,  "0")
+   field(PINI, "YES")
+}
+
+# Record needed for GUI to indicate if the button is enabled od disabled
+record(bo,    "$(P):MainEnable") {
+   field(DTYP, "Soft Channel")
+   field(ZNAM, "0")
+   field(ONAM, "1")
+   field(VAL,  "0")
+   field(PINI, "YES")
+}
+
+record(bo,    "$(P):MainSetPointEnable") {
+   field(DTYP, "Soft Channel")
+   field(ZNAM, "0")
+   field(ONAM, "1")
+   field(VAL,  "0")
+   field(PINI, "YES")
+}
+
+record(bo,    "$(P):SubSetPointEnable") {
+   field(DTYP, "Soft Channel")
+   field(ZNAM, "0")
+   field(ONAM, "1")
+   field(VAL,  "0")
+   field(PINI, "YES")
+}
+
+###################################################################
+## set SetPoint of the Huginn sub-cryostat
+## it will set setpoint of channel 3 and 4 and then calculate PID
+##
+
+record(dfanout, "$(P):Sub_SETP"){
+    field(TPRO, "1")
+    field(DESC, "Huginn Sub-cryostat system setpoint")
+    field(SELM, "All")
+    field(VAL,  "300")
+    field(PREC, "3")
+    field(EGU,  "K")
+    field(PINI, "YES")
+    field(PHAS, "5")
+    field(LOPR, "0")
+    field(HOPR, "350")
+    field(OUTA, "$(P1):SETP_S3 PP")
+    field(OUTB, "$(P1):SETP_S4 PP")
+    field(SCAN, "Passive")
+#    field(FLNK, "Calculate PID")
+}
+
+###################################################################
+## records keeping parameters like safety factor, delayOff, Tolerance, ToleranceTime
+record(ao, "$(P):SafetyFactor") {
+   field(DTYP, "Soft Channel")
+   field(PINI, "1")
+   field(PINI, "YES")
+   field(VAL,  "0.6")
+}
+
+record(ao, "$(P):DelayOff") {
+   field(DTYP, "Soft Channel")
+   field(VAL,  "20")
+   field(PINI, "1")
+}
+record(ao, "$(P):Tolerance"){
+   field(DTYP, "Soft Channel")
+   field(PINI, "1")
+   field(VAL,  "2")
+}
+
+record(ao, "$(P):ToleranceTime"){
+   field(DTYP, "Soft Channel")
+   field(PINI,  "1")
+}
+
+
+
+##################################################################
+## two counters counting switch off/on
+## 
+
+record(ao, "$(P):Counter1"){
+   field(VAL,  "5")
+}
+
+record(ao, "$(P):Counter2") {
+  field(DTYP, "Soft Channel")
+  field(LINR, "NO CONVERSION")
+  field(PINI, "1")
+  field(VAL,  "0")
+}
+
+record(bi,  "$(P):ReadyToMeasure"){
+    field(ZNAM,  "NOT READY")
+    field(ONAM,  "READY")
+}
+
+record(ao, "$(P):IsSetPointOK") {
+  field(PINI, "YES")
+  field(VAL,"1")
+}
+
+##################################################################
+# setpoint limits in SUB criostat (huginn)
+# record to continously calculate deltaTup and deltaTdown, 
+# this is software implementation and will calculate limits and set apprioprate values in SETP_S1, SETP_S2
+record(aSub,  "$(P):Limits") {
+#  field(TPRO, "1")
+  field(DESC, "Limits for SubCryostat setPoint")
+  field(SCAN, "1 second")
+  field(SNAM, "asub_limits")
+# inputs:
+  field(INPA, "$(P):CalibTemp")		field(FTA, "FLOAT")  field(NOA, "32")
+  field(INPB, "$(P):DeltaUp")		field(FTB, "FLOAT")  field(NOB, "32")
+  field(INPC, "$(P):DeltaDown")		field(FTC, "FLOAT")  field(NOC, "32")
+  field(INPD, "$(P1):$(Tbase)")		field(FTD, "FLOAT")  field(NOD, "1")
+  field(INPE, "$(P):Sub_SETP")		field(FTE, "FLOAT")  field(NOE, "1")
+  field(INPF, "$(P):SafetyFactor")	field(FTF, "FLOAT")  field(NOE, "1")
+  field(INPG, "$(P):DelayOff")		field(FTG, "SHORT")  field(NOF, "1")
+  field(INPH, "$(P):Counter2")		field(FTH, "SHORT")
+# outputs:
+  field(OUTA, "$(P):Sub_SETP.HOPR")	field(FTVA, "FLOAT")
+  field(OUTB, "$(P):Sub_SETP.LOPR")	field(FTVB, "FLOAT")
+  field(OUTC, "$(P):Counter2 PP")	field(FTVC, "SHORT")
+  field(OUTD, "$(P):IsSetPointOK PP")	field(FTVD, "SHORT")
+}
+
+###################################################################
+#
+#record(aSub,  "$(P):InRange") {
+#  field(DESC, "Test if cryostat is ready to measure")
+#  field(SNAM, "asub_inrange")
+## inputs:
+##  field(INPA, "$(P1):$(TP1) CPP")	field(FTA,  "FLOAT") 
+##  field(INPB, "$(P1):$(TP2) CPP")	field(FTB,  "FLOAT")
+#  field(INPA, "$(P1):$(TP1)")	field(FTA,  "FLOAT") 
+#  field(INPB, "$(P1):$(TP2)")	field(FTB,  "FLOAT")
+#  field(INPC, "$(P):Sub_SETP")		field(FTC,  "FLOAT")
+#  field(INPD, "$(P):Tolerance")		field(FTD,  "FLOAT")
+#  field(INPE, "$(P):ToleranceTime")	field(FTE,  "SHORT")
+#  field(INPF, "$(P):Counter1")		field(FTF,  "SHORT")
+## outputs:
+#  field(OUTA, "$(P):ReadyToMeasure PP")	field(FTVA, "SHORT")
+#  field(OUTB, "$(P):Counter1 PP")	field(FTVB, "SHORT")
+#}
+#
+
+######################################################################
+# record to continously calculate deltaT (has CPP flag in INPA, INPB)
+######################################################################
+record(calc, "$(P):DeltaT") {
+  field(DESC, "Calcluate DeltaT=Tbase-(TP1+TP2)/2")
+  field(SCAN, "Passive")
+  field(INPA, "$(P1):$(Tbase) CPP")
+  field(INPB, "$(P1):$(TP1) CPP")
+  field(INPC, "$(P1):$(TP2) CPP")
+  field(CALC, "ABS(A-(B+C)/2)")
+  field(PREC, "3")
+  field(EGU,  "K") 
+}
+
+######################################################################
+# record to continously calculate deltaT (has CPP flag in INPA, INPB)
+######################################################################
+record(calc, "$(P):DeltaTMax") {
+  field(DESC, "Calcluate DeltaTMax= ....")
+  field(SCAN, "Passive")
+  field(PREC, "3")
+  field(EGU,  "K") 
+}
+###################################################################
+## 
+## 3 tables for calculate Delta limits
+## these values will be initalized form file by autosave/restore mechanizm
+## 
+record(aai, "$(P):CalibTemp"){
+  field(DESC, "Actual temperature")
+  field(DTYP, "Soft Channel")
+  field(NELM, "32")
+  field(FTVL, "FLOAT")
+}
+
+record(aai, "$(P):DeltaUp"){
+  field(DESC, "Values for Delta Up")
+  field(DTYP, "Soft Channel")
+  field(NELM, "32")
+  field(FTVL, "FLOAT")
+}
+
+record(aai, "$(P):DeltaDown"){
+  field(DESC, "Values for Delta Down")
+  field(DTYP, "Soft Channel")
+  field(NELM, "32")
+  field(FTVL, "FLOAT")
+}
+
+#record(aSub, "$(P):InitField"){
+#   field(TPRO, "1")
+#   field(PINI, "1")
+#   field(PHAS, "1")
+#   field(SNAM, "init")
+#
+# field(INPA, "$(P):FileName")		field(FTA, "FLOAT")  field(NOA, "40")
+# outputsi ch1:
+#  field(OUTA, "$(P1):OMM1 NPP")		field(FTVA, "SHORT")
+#  field(OUTB, "$(P1):OMI1 NPP")		field(FTVB, "SHORT")
+#  field(OUTC, "$(P1):OMP1 NPP")		field(FTVC, "SHORT")
+#
+#  field(OUTD, "$(P1):OMM_S1 PP")	field(FTVD, "SHORT")
+#  field(OUTE, "$(P1):OMI_S1 PP")	field(FTVE, "SHORT")
+#  field(OUTF, "$(P1):OMP_S1 PP")	field(FTVF, "SHORT")
+#
+# outputsi ch2:
+#  field(OUTG, "$(P1):OMM2 NPP")		field(FTVG, "SHORT")
+#  field(OUTH, "$(P1):OMI2 NPP")		field(FTVH, "SHORT")
+#  field(OUTI, "$(P1):OMP2 NPP")		field(FTVI, "SHORT")
+#
+#  field(OUTJ, "$(P1):OMM_S2 NPP")	field(FTVJ, "SHORT")
+#  field(OUTK, "$(P1):OMI_S2 NPP")	field(FTVK, "SHORT")
+#  field(OUTL, "$(P1):OMP_S2 NPP")	field(FTVL, "SHORT")
+#
+# outputsi ch3:
+#  field(OUTM, "$(P1):OMM3 NPP")		field(FTVM, "SHORT")
+#  field(OUTN, "$(P1):OMI3 NPP")		field(FTVN, "SHORT")
+#  field(OUTO, "$(P1):OMP3 NPP")		field(FTVO, "SHORT")
+#
+#  field(OUTP, "$(P1):OMM_S3 NPP")	field(FTVP, "SHORT")
+#  field(OUTQ, "$(P1):OMI_S3 NPP")	field(FTVQ, "SHORT")
+#  field(OUTR, "$(P1):OMP_S3 NPP")	field(FTVR, "SHORT")
+#
+# outputsi ch4:
+#  field(OUTS, "$(P1):OMM4 NPP")		field(FTVS, "SHORT")
+#  field(OUTT, "$(P1):OMI4 NPP")		field(FTVT, "SHORT")
+#  field(OUTU, "$(P1):OMP4 NPP")		field(FTVU, "SHORT")
+#
+#  field(OUTA, "$(P1):OMM_S4 NPP")	field(FTVA, "SHORT")
+#  field(OUTB, "$(P1):OMI_S4 NPP")	field(FTVB, "SHORT")
+#  field(OUTC, "$(P1):OMP_S4 NPP")	field(FTVC, "SHORT")
+#
+#  field(FLNK, "$(P1):InitRun.PROC PP") 
+#}
+
+
+#record(fanout, "$(P):OUTM1"){
+#   field(TPRO, "1")
+#   field(PINI, "1")
+#   field(PHAS, "2")
+#   field(SELM, "All")
+#   field(LNK1, "$(P):setOMM1 PP")
+#   field(LNK2, "$(P):setOMI1 PP")
+#   field(LNK3, "$(P):setOMP1 PP")
+#   field(LNK4, "$(P):setOMM_S1 PP")
+#   field(LNK5, "$(P):setOMI_S1 PP")
+#   field(LNK6, "$(P):setOMP_S1 PP")
+#   field(LNK7, "$(P):OUTMODE1 PP")
+#}
+
+record(stringin, "$(P):GETOUTMODE1"){
+  field(TPRO, "1")
+  field(DTYP, "stream")
+  field(INP,  "@huginn.proto getOUTMODE1 $(PORT) $(ADDR)")
+}
+
+###############################################################
+#record(ao, "$(P):setOMM1"){
+#   field(VAL, "3")
+#   field(OUT, "$(P1):OMM1 NPP")
+#}
+#
+#record(ao, "$(P):setOMI1"){
+#   field(VAL, "3")
+#   field(OUT, "$(P1):OMI1 NPP")
+#}
+#record(ao, "$(P):setOMP1"){
+#   field(VAL, "0")
+#   field(OUT, "$(P1):OMP1 NPP")
+#}
+#
+#record(ao, "$(P):setOMM_S1"){
+#   field(VAL, "3")
+#   field(OUT, "$(P1):OMM_S1 NPP")
+#}
+#
+#record(ao, "$(P):setOMI_S1"){
+#   field(VAL, "3")
+#   field(OUT, "$(P1):OMI_S1 NPP")
+#}
+#record(ao, "$(P):setOMP_S1"){
+#   field(VAL, "0")
+#   field(OUT, "$(P1):OMP_S1 NPP")
+#}
+
+############################################################
+#record(ao, "$(P):DISABLE"){
+#   field(PINI, "1")
+#   field(PHAS, "1")
+#   field(VAL,  "1")
+#   field(OUT, "$(P1):DISABLE PP")
+#}
+#record(ao, "$(P):ENABLE"){
+#   field(VAL,  "0")
+#   field(OUT, "$(P1):DISABLE PP")
+#
+#}
+
+
+
+#########################################################################################
+# set name of input channels A, B, C, D of mainCryiostat
+# these values will be initalized form file by autosave/restore mechanizm
+#record(stringout,  "$(P):MainNameA"){
+#  field(DESC, "Name of channel A")
+#  field(DTYP, "Soft Channel")
+#  field(PINI, "1")
+#  field(PHAS, "5")
+##  field(OUT,  "$(P2):INNAME_S0 PP")
+#  field(PHAS, "6")
+#}
+#record(stringout,  "$(P):MainNameB"){
+#  field(DESC, "Name of channel B")
+#  field(DTYP, "Soft Channel")
+#  field(PINI, "1")
+#  field(PHAS, "5")
+##  field(OUT,  "$(P2):INNAME_S1 PP")
+#  field(PHAS, "6")
+#}
+#record(stringout,  "$(P):MainNameC"){
+#  field(DESC, "Name of channel C")
+#  field(DTYP, "Soft Channel")
+#  field(PINI, "1")
+#  field(PHAS, "5")
+##  field(OUT,  "$(P2):INNAME_S2 PP")
+#  field(PHAS, "6")
+#}
+#record(stringout,  "$(P):MainNameD"){
+#  field(DESC, "Name of channel D")
+#  field(DTYP, "Soft Channel")
+#  field(PINI, "1")
+#  field(PHAS, "5")
+##  field(OUT,  "$(P2):INNAME_S3 PP")
+#  field(PHAS, "6")
+#}
+
+
+##########################################################################################
+## for test only, 
+#record(aSub, "$(P):asub_test") {
+#   field(SNAM, "asub_test")
+#}
+##
+#############################################################################################
+# Bounds of records to control Max vol output
+###################################################################
+## variable to calculate max Volt out
+## for details see the Matlab documentation
+## these values will be initalized form file by autosave/restore mechanizm
+record(ao,  "$(P):MaxV100:CALG6"){
+  field(DESC, "Value for Max V100 CALG6")
+  field(DTYP, "Soft Channel")
+  field(PINI, "1")
+}
+
+record(ao,  "$(P):MaxV100:CALG7"){
+  field(DESC, "Value for Max V100 CALG7")
+  field(DTYP, "Soft Channel")
+  field(PINI, "1")
+}
+
+record(ao,  "$(P):MaxV100:CALZ6"){
+  field(DESC, "Value for Max V100 CALZ6")
+  field(DTYP, "Soft Channel")
+  field(PINI, "1")
+}
+
+record(ao,  "$(P):MaxV100:CALZ7"){
+  field(DESC, "Value for Max V100 CALZ7")
+  field(DTYP, "Soft Channel")
+  field(PINI, "1")
+}
+## --
+record(ao,  "$(P):MaxV75:CALG6"){
+  field(DESC, "Value for Max V100 CALG6")
+  field(DTYP, "Soft Channel")
+  field(PINI, "1")
+}
+
+record(ao,  "$(P):MaxV75:CALG7"){
+  field(DESC, "Value for Max V100 CALG7")
+  field(DTYP, "Soft Channel")
+  field(PINI, "1")
+}
+
+record(ao,  "$(P):MaxV75:CALZ6"){
+  field(DESC, "Value for Max V100 CALZ6")
+  field(DTYP, "Soft Channel")
+  field(PINI, "1")
+}
+
+record(ao,  "$(P):MaxV75:CALZ7"){
+  field(DESC, "Value for Max V100 CALZ7")
+  field(DTYP, "Soft Channel")
+  field(PINI, "1")
+}
+## ---
+record(ao,  "$(P):MaxV50:CALG6"){
+  field(DESC, "Value for Max V100 CALG6")
+  field(DTYP, "Soft Channel")
+  field(PINI, "1")
+}
+
+record(ao,  "$(P):MaxV50:CALG7"){
+  field(DESC, "Value for Max V100 CALG7")
+  field(DTYP, "Soft Channel")
+  field(PINI, "1")
+}
+
+record(ao,  "$(P):MaxV50:CALZ6"){
+  field(DESC, "Value for Max V100 CALZ6")
+  field(DTYP, "Soft Channel")
+  field(PINI, "1")
+}
+
+record(ao,  "$(P):MaxV50:CALZ7"){
+  field(DESC, "Value for Max V100 CALZ7")
+  field(DTYP, "Soft Channel")
+  field(PINI, "1")
+}
+
+
+record(mbbo, "$(P):Main_MAXVout") {
+   field(DESC, "Lake Shore Max output voltage")
+   field(DTYP, "Soft Channel")
+   field(ZRST, "10")
+   field(ONST, "7.5")
+   field(TWST, "5.0")
+   field(VAL,  "0")
+   field(PINI, "YES")
+   field(FLNK, "$(P):MaxVoltAddOne")
+}
+
+# Record Main_MAXVout has values from 0-2 we however need it from 1-3 to process one of the link (1-3) in the SetMaxVolt record, 
+# so we have to add 1 to the MainMAXVout. 
+record(calc, "$(P):MaxVoltAddOne"){
+   field(DESC, "add 1 to checkbox MainMAXVout")
+   field(INPA, "$(P):Main_MAXVout")
+   field(CALC, "A=A+1")
+   field(FLNK, "$(P):SetMaxVolt")
+}
+
+record(fanout, "$(P):SetMaxVolt"){
+   field(DESC, "Set selected MaxVolt")
+   field(LNK1, "$(P):SetMaxVolt100")
+   field(LNK2, "$(P):SetMaxVolt75")
+   field(LNK3, "$(P):SetMaxVolt50")
+   field(SELM, "Specified")
+   field(SELL, "$(P):MaxVoltAddOne")
+}
+
+record(fanout, "$(P):SetMaxVolt100"){
+   field(DESC, "Set MaxVolt 100")
+   field(LNK1, "$(P):MaxV100:CALG6")
+   field(LNK2, "$(P):MaxV100:CALG7")
+   field(LNK3, "$(P):MaxV100:CALZ6")
+   field(LNK4, "$(P):MaxV100:CALZ7")
+}
+
+record(fanout, "$(P):SetMaxVolt75"){
+   field(DESC, "Set MaxVolt 75")
+   field(LNK1, "$(P):MaxV75:CALG6")
+   field(LNK2, "$(P):MaxV75:CALG7")
+   field(LNK3, "$(P):MaxV75:CALZ6")
+   field(LNK4, "$(P):MaxV75:CALZ7")
+}
+
+record(fanout, "$(P):SetMaxVolt50"){
+   field(DESC, "Set MaxVolt 50")
+   field(LNK1, "$(P):MaxV50:CALG6")
+   field(LNK2, "$(P):MaxV50:CALG7")
+   field(LNK3, "$(P):MaxV50:CALZ6")
+   field(LNK4, "$(P):MaxV50:CALZ7")
+}
+
+record(mbbi, "$(P):Main_MAXVout_rbv") {
+  field(DESC, "Lake Shore Max output voltage")
+  field(DTYP, "Soft Channel")
+  field(ZRST, "10")
+  field(ONST, "7.5")
+  field(TWST, "5.0")
+  field(VAL,  "0")
+  field(PINI, "YES")
+}
+
+##################################################################
+# record to have acctual time, needed for log and messages. It has 1sec accracy.
+record(stringin, "$(P):TimeNow") {
+    field(DESC, "Current time and date")
+    field(DTYP, "Soft Timestamp")
+#    field(INP, "@%Y-%m-%d %H:%M:%S.%03f")
+#    field(INP, "@%Y-%m-%d %H:%S.%01f ")
+    field(INP, "@%x %T ")
+    field(SCAN, "1 second")
+}
+
+record(stringin, "$(P):Message") {
+  field(DESC, "Last messages")
+  field(DTYP, "Soft Channel")	 
+}
+
+record(scalcout, "$(P):sConcatenate"){
+  field(SCAN, "Passive")
+  field(DESC, "Strings Concatenation")
+  field(INAA, "$(P):TimeNow")
+  field(INBB, "$(P):Message CPP")
+  field(CALC, "AA+BB")
+  field(OUT,  "$(P):Logger PP")
+}
+
+record(stringout, "$(P):Logger") {
+  field(DESC, "Last log messages with time")
+  field(DTYP, "Soft Channel")	 
+}
+
+record(stringout, "$(P):Warning") {
+  field(DESC, "Warning to display on GUI")
+  field(DTYP, "Soft Channel")
+  field(VAL,  "")
+  field(PINI, "YES")
+}
+

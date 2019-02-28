@@ -1,4 +1,4 @@
-program huginn
+program snl_huginn
 
 
 %%#include <stdio.h>
